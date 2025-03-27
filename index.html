@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouLoder</title>
+    <style>
+        body {
+            background-color: #181818;
+            background-image: url('https://i.postimg.cc/43sjYRyd/Youloder.png');
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            width: 280px;
+            background: url('https://media1.giphy.com/media/tuyd8dZuryAykOwWPc/giphy.webp?cid=ecf05e47zwolxqg8y87pox1nuvbx88b7pl1ql0i0is5dizys&ep=v1_gifs_search&rid=giphy.webp&ct=g');
+            background-size: cover;
+            background-color: rgba(0, 0, 0, 0.87);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+        .sidebar img {
+            width: 50px;
+        }
+        .sidebar .logo-text {
+            margin-left: 10px;
+            font-size: 46px;
+            font-weight: bold;
+            color: white;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            padding-top: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            background: #222;
+            padding: 10px;
+            border-radius: 30px;
+        }
+        .search-bar {
+        width: 100%;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        padding: 5px;
+        padding-left: 10px;
+        outline: none;
+        text-transform: uppercase;  /* Convierte el texto a mayúsculas */
+        }
+        .search-btn:hover {
+            background: rgba(80, 79, 79, 0.9);
+            border-radius: 25%;
+            padding-right: 5px;
+        }
+
+        .search-btn:active {
+            background: rgba(80, 79, 79, 0.9);
+            border-radius: 25%;
+        }
+        .search-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            padding-right: 5px;
+        }
+        .results {
+            margin-top: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 100px);
+            scrollbar-color: red #181818;
+        }
+        .video-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #333;
+        }
+        .video-item img {
+            width: 140px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+        .video-info {
+            flex-grow: 1;
+            margin-left: 10px;
+        }
+        .video-info a {
+            color: white;
+            text-decoration: none;
+        }
+        .download-btn {
+        background: rgba(255, 0, 0, 0.3);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            background: rgba(255, 0, 0, 0.6);
+        }
+
+        .download-btn:active {
+            background: rgba(255, 0, 0, 0.9);
+        }
+
+        .download-btn.in-progress {
+            background: rgba(0, 255, 0, 0.6);
+        }
+        .thumbnail-placeholder {
+            width: 140px;
+            height: 80px;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .play-button {
+            background-color: red;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .progress-bar-container {
+            width: 20%;
+            background-color: black;
+            border-radius: 30px;
+            padding: 5px;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 0%;
+            height: 8px;
+            background-color: red;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2F%2F8fb0a4a9-b7e4-4280-8aa8-4eb185e4b7d9/watermark:F/width:149?csig=AAAAAAAAAAAAAAAAAAAAAK7zHXpDQeNaAUAJlLGSdjItyFt9MwecXBPjwRZGxbRJ&exp=1742934834&osig=AAAAAAAAAAAAAAAAAAAAAP34oumX78Mjfm7SvzHAsg_WIULRvdTNUyOzX1k6pAOa&signer=media-rpc&x-canva-quality=thumbnail" alt="Logo">
+            <div class="logo-text">Youloader</div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="search-container">
+            <input type="text" class="search-bar" id="searchQuery" placeholder="Search..." onkeypress="handleKeyPress(event)">
+            <button class="search-btn" onclick="searchYouTube()">🔍︎</button>
+        </div>
+        <div class="results" id="results"></div>
+    </div>
+    
+    <div class="modal" id="loadingModal">
+        <img src="https://media.canva.com/v2/image-resize/format:PNG/height:200/quality:100/uri:ifs%3A%2F%2F%2F8fb0a4a9-b7e4-4280-8aa8-4eb185e4b7d9/watermark:F/width:149?csig=AAAAAAAAAAAAAAAAAAAAAK7zHXpDQeNaAUAJlLGSdjItyFt9MwecXBPjwRZGxbRJ&exp=1742934834&osig=AAAAAAAAAAAAAAAAAAAAAP34oumX78Mjfm7SvzHAsg_WIULRvdTNUyOzX1k6pAOa&signer=media-rpc&x-canva-quality=thumbnail" alt="Logo" width="100">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+    
+    <script>
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchYouTube();
+            }
+        }
+
+        function searchYouTube() {
+            let query = document.getElementById("searchQuery").value;
+            let resultsDiv = document.getElementById("results");
+            let loadingModal = document.getElementById("loadingModal");
+            let progressBar = document.getElementById("progressBar");
+            resultsDiv.innerHTML = "";
+            resultsDiv.style.display = "none";
+            loadingModal.style.display = "flex";
+
+            let progress = 0;
+            let interval = setInterval(() => {
+                progress += 5; 
+                progressBar.style.width = progress + "%";
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 200);
+    
+            fetch(`/search?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    resultsDiv.innerHTML = "";
+                    data.forEach(video => {
+                        let thumbnailURL = video.thumbnails && video.thumbnails.length > 0 ? video.thumbnails[0].url : '';
+    
+                        let videoElement = document.createElement("div");
+                        videoElement.className = "video-item";
+                        videoElement.innerHTML = `
+                            <img src="${thumbnailURL}" alt="Thumbnail">
+                            <div class="video-info">
+                                <a href="https://www.youtube.com/watch?v=${video.id}" target="_blank">${video.title}</a>
+                            </div>
+                            <button class="download-btn" onclick="downloadVideo('${video.url}', this)">Download MP3</button>
+                        `;
+                        resultsDiv.appendChild(videoElement);
+                    });
+                    resultsDiv.style.display = "block";
+                    loadingModal.style.display = "none";
+                });
+        }
+
+        function downloadVideo(url, btn) {
+            btn.classList.add('in-progress');
+            btn.innerText = 'Downloading...';
+            
+            fetch(`/download?url=${encodeURIComponent(url)}&format=mp3`)
+                .then(response => response.blob())
+                .then(data => {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = URL.createObjectURL(data);
+                    downloadLink.download = 'audio.mp3';
+                    downloadLink.click();
+                    
+                    btn.classList.remove('in-progress');
+                    btn.innerText = 'Download MP3';
+                });
+        }
+    </script>
+</body>
+</html>
+
